@@ -45,7 +45,7 @@ describe("tuktuk-gpt-oracle", () => {
 
 
 
-  xit("Is initialized!", async () => {
+  it("Is initialized!", async () => {
     const llmProgram: any = await getLLMProgram();
 
     const [counterAddress] = PublicKey.findProgramAddressSync(

@@ -30,6 +30,7 @@ pub struct AgentInput<'info> {
     pub context_account: Account<'info, ContextAccount>,
 
     #[account(address = solana_gpt_oracle::ID)]
+    /// CHECK: Oracle program ID verification
     pub oracle_program: AccountInfo<'info>,
     pub system_program: Program<'info, System>,
 
