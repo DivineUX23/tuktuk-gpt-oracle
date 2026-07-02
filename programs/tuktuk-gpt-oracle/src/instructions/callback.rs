@@ -1,9 +1,5 @@
 use anchor_lang::prelude::*;
-use solana_gpt_oracle::cpi::{
-    accounts::{CreateLlmContext, interactWithLlm},
-    create_llm_context, interact_with_llm,
-};
-use solana_gpt_oracle::{ContextAccount, Counter, Identity};
+use solana_gpt_oracle::Identity;
 
 use crate::{state::{Agent, AdoptionScore}};
 
@@ -27,7 +23,7 @@ pub struct CallBack<'info> {
 impl <'info> CallBack <'info> {
     pub fn agent_response(&mut self, response: String) -> Result<()> {
 
-        let score = response.trim().parse::<f32>()?;
+        let score = response.trim().parse::<f32>().unwrap_or(0.0);
         self.adoption.per_score = score;
 
         Ok(())

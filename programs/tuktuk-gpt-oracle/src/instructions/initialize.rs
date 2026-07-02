@@ -1,8 +1,6 @@
 use anchor_lang::prelude::*;
-use solana_gpt_oracle::{CreateLlmContext, InitializeBumps, cpi::{
-    accounts::{CreateLlmContext, interactWithLlm},
-    create_llm_context, interact_with_llm,
-}, solana_gpt_oracle::create_llm_context};
+use solana_gpt_oracle::cpi::accounts::CreateLlmContext;
+use solana_gpt_oracle::cpi::create_llm_context;
 use solana_gpt_oracle::{ContextAccount, Counter, Identity};
 
 use crate::{state::{Agent, AdoptionScore}};
@@ -21,7 +19,7 @@ Evaluate the systemic incentives (inflation hedging, payment transaction fee arb
 
 ### Strict Output Constraints:
 You must output ONLY raw numbers representing the calculated probability rounded to two decimal places. 
-- Do NOT include the "%" sign.
+- Do NOT include the \"%\" sign.
 - Do NOT include letters, words, spaces, headers, punctuation, or any unique characters.
 - Output exactly 4 to 5 digits representing the percentage (e.g., if the probability is 64.21%, your output must be exactly: 64.21).
 ";
@@ -35,7 +33,7 @@ pub struct Initialize<'info> {
     #[account(
         init,
         payer = signer,
-        space = Agent::DISCRIMINATOR.len() + Agent::INIT_SPACE.len(),
+        space = 8 + Agent::INIT_SPACE,
         seeds = [b"agent"],
         bump
     )]
@@ -60,15 +58,15 @@ impl <'info> Initialize <'info> {
         self.agent.context = self.llm_context.key();
 
         let accounts = CreateLlmContext {
-            payer: self.signer,
-            counter: self.counter,
-            context_account: self.llm_context,
-            system_program: self.system_program,
+            payer: self.signer.to_account_info(),
+            counter: self.counter.to_account_info(),
+            context_account: self.llm_context.to_account_info(),
+            system_program: self.system_program.to_account_info(),
         };
 
         let cpi_program = self.oracle_program.to_account_info();
 
-        let cpi_ctx = CpiContext::new(cpi_program, accounts)?;
+        let cpi_ctx = CpiContext::new(cpi_program, accounts);
 
         create_llm_context(cpi_ctx, SYSTEM_PROMPT.to_string())?;
 

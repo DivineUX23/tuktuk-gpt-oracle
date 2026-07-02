@@ -3,16 +3,21 @@ pub mod state;
 pub mod instructions;
 
 pub use state::*;
-pub use instruction::*;
+pub use instructions::*;
 
+#[error_code]
+pub enum ErrorCode {
+    #[msg("String too long")]
+    StringTooLong,
+}
 
 declare_id!("zE1jk5aozH9ndbKvF6LJT4VBUDTGCcRedTiZGwiPs7v");
 
 #[program]
 pub mod tuktuk_gpt_oracle {
-    use crate::instructions::{AgentInput, CallBack};
+    use crate::instructions::{Initialize, AgentInput, CallBack};
 
-use super::*;
+    use super::*;
 
     pub fn initialize(ctx: Context<Initialize>) -> Result<()> {
         ctx.accounts.init(ctx.bumps)

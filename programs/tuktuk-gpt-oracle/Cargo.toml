@@ -18,6 +18,6 @@ idl-build = ["anchor-lang/idl-build"]
 
 
 [dependencies]
-anchor-lang = "0.31.1"
-ephemeral-rollups-sdk = "0.8.0"  # Lock to stable Solana v2 compatibility
-solana-gpt-oracle = "=0.1.0"      # Force Cargo to compile EXACTLY v0.1.0
+anchor-lang = "0.30.1"
+
+solana-gpt-oracle = { version = "=0.1.0", features = ["cpi"] }
